@@ -1,0 +1,40 @@
+class Solution { //merge sorting
+public: // Call mergeSort, pass vector nums and the range, and return sorted vector
+    vector<int> sortArray(vector<int>& nums) {
+        mergeSort(nums, 0, nums.size() - 1);
+        return nums;
+}
+private: // divide array into small parts, sort, then merge.
+     void mergeSort(vector<int>& A, int l, int r) {
+        if (l >= r)
+            return;
+
+        const int m = (l + r) / 2;
+        mergeSort(A, l, m);
+        mergeSort(A, m + 1, r);
+        merge(A, l, m, r);
+}
+    
+void merge(vector<int>& A, int l, int m, int r) { // merge sorted arrays into single sorted array
+    vector<int> sorted(r - l + 1);
+    int k = 0;      
+    int i = l;     
+    int j = m + 1;  
+
+    while (i <= m && j <= r) //compares the arrays and adds smaller element into merged array
+      if (A[i] < A[j])
+        sorted[k++] = A[i++];
+      else
+        sorted[k++] = A[j++];
+
+    while (i <= m)
+        sorted[k++] = A[i++];
+
+    while (j <= r)
+        sorted[k++] = A[j++];
+
+    copy(sorted.begin(), sorted.end(), A.begin() + l);
+  }
+};
+
+// Run with C++
