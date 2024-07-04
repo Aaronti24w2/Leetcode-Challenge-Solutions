@@ -1,0 +1,43 @@
+class LRUCache {
+public:
+    LRUCache(int capacity) : capacity(capacity) {
+        
+    }
+    
+    int get(int key) {
+        //Check if key exists in cache
+        auto it = cache.find(key);
+        if (it == cache.end()) {
+            return -1;
+        }
+        // Move accessed node to front of list (most recently used)
+        usage.splice(usage.begin(), usage, it->second);
+        return it->second->second;
+    }
+    
+    void put(int key, int value) {
+        auto it = cache.find(key);
+        // key exists, update value and place in front
+        if (it != cache.end()) {
+            usage.splice(usage.begin(), usage, it->second);
+            it->second->second = value;
+            return;
+        }
+
+        // cache at capacity, remove least recently used
+        if (usage.size() == capacity) {
+            int lruKey = usage.back().first;
+            usage.pop_back();
+            cache.erase(lruKey);
+        }
+        // insert new key-value at front of list
+        usage.emplace_front(key, value);
+        cache[key] = usage.begin();
+    }
+
+    private:
+    int capacity;
+    list<pair<int, int>> usage;
+    unordered_map<int, list<pair<int, int>>::iterator> cache;
+    
+};
